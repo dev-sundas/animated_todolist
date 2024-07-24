@@ -18,7 +18,7 @@ const play = Playball({
 export interface IloginFormProps {
 }
 
-export default function loginForm (props: IloginFormProps) {
+export default function LoginForm (props: IloginFormProps) {
     const form = useForm<LoginFormType>({
         resolver:zodResolver(LoginFormSchema),
     });
