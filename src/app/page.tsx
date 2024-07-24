@@ -9,8 +9,9 @@ const Todolist: todoType[] = todolist
 export default function Home() {
 
     return (
-        <main className='bg-[url(/images/todo2.jpg)]  min-h-[100vh] h-full' >
-            <section className="main">
+        <main>
+            <section //className="main"
+            >
                 <Todo />
             </section>
         </main>

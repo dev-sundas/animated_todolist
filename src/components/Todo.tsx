@@ -8,14 +8,14 @@ import Heading from './HeadingItems';
 import ViewTodo from './ViewTodo';
 import { useEffect, useState } from 'react';
 
-
 type Props = {
 }
 
 const Todolist: todoType[] = todolist
-export default function Todo({ }: Props) {
-    const [todoList, setTodoList] = useState<todoType[]>(Todolist);
-
+export default function Todo({}: Props) {
+    const [todoList, setTodoList] = useState<todoType[]>([]);
+  //  const [user, setUser] = useState<string | null>(null);
+{/*
     useEffect(() => {
         const getTodo = async () => {
             const response = await fetch("/api/todo",{
@@ -29,7 +29,7 @@ export default function Todo({ }: Props) {
             console.log("message----> ", message)
            
                 setTodoList(() => [
-                    ...Todolist,
+                    //...Todolist,
                     ...message.map((todo: todoType) => ({
                         id: todo.id,
                         title: todo.title,
@@ -39,18 +39,65 @@ export default function Todo({ }: Props) {
           
         }
         getTodo()
-    }, [])
+    }, [])*/}
+
+    useEffect(() => {
+      const getTodo = async () => {
+        try {
+        const response = await fetch('api/todo', {
+          method: 'GET',
+          headers: {
+          'Content-Type': 'application/json',
+          },
+          cache: 'no-cache',
+        });
+    
+        if (!response.ok) {
+          console.error('Failed to fetch todos:', response.statusText);
+          return;
+        }
+    
+        const { message} = await response.json();
+        console.log('Fetched todos--------------->:', message);
+          setTodoList(() => [
+          //...Todolist,
+          ...message.map((todo: todoType) => ({
+            id: todo.id,
+            title: todo.title,
+            status: todo.status,
+            })),    
+          ]);
+        } catch (error) {
+        console.error('Error fetching todos:', error);
+        }
+      };
+    
+      getTodo();
+      },[]);
 
 
-
+    {/*  useEffect(() => {
+        const fetchUser = async () => {
+          const response = await fetch('/api/user'); // Fetch user data from API or headers
+          const data = await response.json();
+          setUser(data.user || null);
+        };
+        
+        fetchUser();
+      }, []);}
+    
+      if (!user) {
+        return <div>Loading...</div>;
+      }
+     */}
     const addTodo = async (data: TodoFormType) => {
         const response = await fetch("/api/todo", {
             method: "POST",
-            body: JSON.stringify({ title: data.title, status: data.status }),
+            body: JSON.stringify({ title: data.title, status: data.status}),
         });
         const {message, todo} = await response.json();
-        console.log("result", message);
-        setTodoList((prevTodoList) => [
+        console.log("result", message, todo);
+          setTodoList((prevTodoList) => [
             ...prevTodoList,
             {
               id: todo.id,
@@ -58,9 +105,8 @@ export default function Todo({ }: Props) {
               status: todo.status,
             },
           ]);
-
-    }
-
+        };
+        
     const handleDelete = async (id: number) => {
         try {
             const response = await fetch("/api/todo", {
@@ -85,6 +131,7 @@ export default function Todo({ }: Props) {
 
     const UpdateTodo = async (id: number, title: string,status:boolean) => {
         try {
+          console.log('Updating todo:', { id, title, status }); // Log the todo item being updated
           const response = await fetch("/api/todo", {
             method: "PUT",
             headers: { 'Content-Type': 'application/json' },
@@ -159,7 +206,7 @@ export default function Todo({ }: Props) {
 
     return (
         <div className=''>
-            <div className="flex flex-col justify-center items-center w-[100%] h-[100vh] ">
+            <div className="flex flex-col justify-center items-center w-[100%] h-[100vh]">
                 <motion.div
                     className='w-[500px] bg-transparent shadow-lg 
                    max-h-screen overflow-y-auto
@@ -168,6 +215,7 @@ export default function Todo({ }: Props) {
                     initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 2, delay: 1 }}
                 >
                     <motion.div>
+                      {/*<h1>welcome {user}</h1>*/}
                         <Heading heading1={'Todo'} heading2={'List'} />
                         <AddTodo addTodo={addTodo} />
                         <ViewTodo todoList={todoList}
