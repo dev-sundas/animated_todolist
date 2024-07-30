@@ -111,3 +111,79 @@ export async function DELETE(request: NextRequest) {
         return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
     }
 }
+
+{/*// Import necessary modules
+import bcrypt from 'bcryptjs'; // For password hashing and comparison
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import * as jose from "jose";
+import { mySchemaUsers } from '../../../../drizzle/schema';
+import { eq } from 'drizzle-orm';
+import { database } from '../../../../drizzle/database';
+import { cookies } from 'next/headers';
+
+export async function POST(request: NextRequest) {
+    try {
+        const { username, password } = await request.json();
+
+        console.log("Login attempt for:", username);
+
+        // Log the beginning of the query execution
+        console.log("Executing database query...");
+
+        // Fetch user from database
+        const users = await database
+            .select()
+            .from(mySchemaUsers)
+            .where(eq(mySchemaUsers.username, username));
+
+        // Log the result of the query
+        console.log("Database query result:", users);
+
+        if (users.length > 0) {
+            const user = users[0];
+
+            // Verify the password
+            const passwordHash = user.password as string; // Type assertion
+            const isPasswordValid = await bcrypt.compare(password, passwordHash);
+            if (!isPasswordValid) {
+                console.warn("Invalid password attempt for:", username);
+                return NextResponse.json({ message: "Wrong email or password" }, { status: 401 });
+            }
+
+            // Generate JWT
+            const secret = process.env.JWT_SECRET;
+            if (!secret) {
+                throw new Error("JWT_SECRET is not defined");
+            }
+
+            const alg = "HS256";
+            const jwt = await new jose.SignJWT({
+                username: user.username,
+                id: user.id,
+            })
+                .setProtectedHeader({ alg })
+                .setIssuedAt()
+                .setExpirationTime("2h")
+                .sign(new TextEncoder().encode(secret));
+
+            // Set the JWT in a cookie
+            cookies().set("token", jwt, {
+                httpOnly: true,
+                path: '/', // Ensure cookie is accessible to your application
+                secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+            });
+
+            console.log("User logged in successfully:", user);
+
+            return NextResponse.json({ message: "User logged in successfully", user });
+        }
+
+        console.warn("Invalid login attempt for:", username);
+        return NextResponse.json({ message: "Wrong email or password" }, { status: 401 });
+    } catch (error) {
+        console.error("Error processing login request:", error);
+        return NextResponse.json({ error: "Failed to process request" }, { status: 500 });
+    }
+}
+*/}
